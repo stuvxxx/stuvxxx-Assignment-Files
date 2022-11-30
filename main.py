@@ -1,7 +1,8 @@
 __winc_id__ = "ae539110d03e49ea8738fd413ac44ba8"
 __human_name__ = "files"
 
-import os 
+import os
+import shutil
 from zipfile import ZipFile
 
 base_path = os.getcwd()
@@ -9,9 +10,8 @@ cache_path = os.path.join(base_path, "cache")
 
 def clean_cache():
     if os.path.exists(cache_path):
-        all_files = os.listdir(cache_path)
-        for f in all_files:
-            os.remove(f)           
+        shutil.rmtree(cache_path)
+        os.makedirs(cache_path)           
     else: 
         os.makedirs(cache_path) 
         
@@ -30,13 +30,13 @@ def cached_files():
         else: print("Found a nonfile!")
     return file_list
 
-file_list = cached_files()
-
 def find_password(file_list):
     for f in file_list: 
         with open(f) as txt:
             for line in txt:
                 if "password" in line:
-                    print(line)
-                    return line
+                    password = line.split(" ")[1]
+                    pw = password.rstrip("\n")
+                    print(pw)
+                    return pw
                 
